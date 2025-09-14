@@ -1,0 +1,12 @@
+{
+  "name": "node-gke-demo",
+  "version": "1.0.0",
+  "description": "Sample Node.js app for GCR + GKE",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}

@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: node-gke-demo
+  labels:
+    app: node-gke-demo
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: node-gke-demo
+  template:
+    metadata:
+      labels:
+        app: node-gke-demo
+    spec:
+      containers:
+      - name: node-gke-demo
+        image: us-east4-docker.pkg.dev/x-object-472022-q2/node-images/node-gke-demo:1
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 3000
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 250m
+            memory: 256Mi
