@@ -339,10 +339,27 @@ kubectl delete namespace demo
 gcloud container clusters delete demo-autopilot --region us-east4 --quiet
 
 # (Optional) remove image from GCR
-gcloud container images delete gcr.io/$PROJECT_ID/node-gke-demo@$(
-  gcloud container images list-tags gcr.io/$PROJECT_ID/node-gke-demo \
-  --filter="tags:$IMAGE_TAG" --format='get(digest)'
-) --quiet
+# See what’s inside node-images
+export PROJECT_ID="$(gcloud config get-value project -q)"
+export REPO=node-images
+export LOCATION=us-east4
+
+# List Docker images (repositories) inside the AR repo
+gcloud artifacts docker images list "$LOCATION-docker.pkg.dev/$PROJECT_ID/$REPO" --include-tags
+
+
+#Delete specific images/tags (safe option)
+# Example: delete a specific tag
+gcloud artifacts docker images delete \
+  "$LOCATION-docker.pkg.dev/$PROJECT_ID/$REPO/<image-name>:<tag>" --delete-tags
+
+# Or delete by digest
+gcloud artifacts docker images delete \
+  "$LOCATION-docker.pkg.dev/$PROJECT_ID/$REPO/<image-name>@sha256:<digest>" --delete-tags
+
+
+#Delete the entire AR repository (removes all content)
+gcloud artifacts repositories delete "$REPO" --location="$LOCATION"
 ```
 
 ---
